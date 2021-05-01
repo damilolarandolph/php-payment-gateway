@@ -47,7 +47,6 @@ class RouteMap
         if (!isset($currTable['.'])) {
             throw new Error("Route not found");
         }
-        var_dump($currTable['.']);
         ($currTable['.']->handler)();
     }
     /**
