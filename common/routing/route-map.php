@@ -12,30 +12,21 @@ class RouteMap
 {
 
     /**
-     * @var array $routes
+     * @var \Gateway\REST\Controller[]
      */
-    private $getRoutes;
+    private $routes;
 
-    /**
-     * 
-     */
-    private $postRoutes;
 
     public function __construct()
     {
-        $this->getRoutes = array('/' => array());
-        $this->postRoutes = array('/' => array());
+        $this->routes = array('/' => array());
     }
 
     public function invokeRoute($method, $path)
     {
         $explodedPath = preg_split('#/#', $path, -1, PREG_SPLIT_NO_EMPTY);
-        $routeTable = null;
-        if ($method == RouteMethods::$GET) {
-            $routeTable = &$this->getRoutes;
-        } else {
-            $routeTable = &$this->postRoutes;
-        }
+        $routeTable = &$this->routes;
+
         $currTable = &$routeTable['/'];
         foreach ($explodedPath as $item) {
             if (!isset($currTable[$item])) {
@@ -47,21 +38,24 @@ class RouteMap
         if (!isset($currTable['.'])) {
             throw new Error("Route not found");
         }
-        ($currTable['.']->handler)();
+        $controller = $currTable['.'];
+        if ($method == RouteMethods::$GET) {
+            $controller->get();
+        } else {
+            $controller->post();
+        }
     }
     /**
-     * @param string $method
-     * @param Route  $route
+     * @param string $path 
+     * @param Closure|\Gateway\REST\Controller  $handler
      */
-    public function addRoute($route)
+    public function addRoute($path, $handler)
     {
-        $explodedPath = preg_split('#/#', $route->path, -1, PREG_SPLIT_NO_EMPTY);
-        $routeTable = null;
-        if ($route->method == RouteMethods::$GET) {
-            $routeTable = &$this->getRoutes;
-        } else {
-            $routeTable = &$this->postRoutes;
-        }
+
+        if (!($handler instanceof \Gateway\REST\Controller))
+            throw new Error("Route handler must be subclasses of Controller clas");
+        $explodedPath = preg_split('#/#', $path, -1, PREG_SPLIT_NO_EMPTY);
+        $routeTable = &$this->routes;
         $currTable = &$routeTable['/'];
         foreach ($explodedPath as $item) {
             if (!isset($currTable[$item])) {
@@ -69,15 +63,6 @@ class RouteMap
             }
             $currTable = &$currTable[$item];
         }
-
-        $currTable['.'] = $route;
+        $currTable['.'] = $handler;
     }
-}
-
-
-class Route
-{
-    public $path;
-    public $method;
-    public $handler;
 }

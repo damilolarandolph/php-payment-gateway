@@ -23,23 +23,15 @@ class Router
         $this->routeMap = new RouteMap();
     }
 
-    public function get($path, $handler)
+    /**
+     * @param string $path
+     * @param \Gateway\REST\Controller $controller
+     */
+    public function add($path, $controller)
     {
-        $route = new Route();
-        $route->handler = $handler;
-        $route->path = $path;
-        $route->method = RouteMethods::$GET;
-        $this->routeMap->addRoute($route);
+        $this->routeMap->addRoute($path, $controller);
     }
 
-    public function post($path, $handler)
-    {
-        $route = new Route();
-        $route->handler = $handler;
-        $route->path = $path;
-        $route->method = RouteMethods::$POST;
-        $this->routeMap->addRoute($route);
-    }
 
     public function navigate()
     {
