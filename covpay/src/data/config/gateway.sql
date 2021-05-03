@@ -23,10 +23,9 @@ CREATE TABLE `cardDetails` (
 );
 
 CREATE TABLE `bankDetails` (
-  `id` varchar(255) DEFAULT (uuid()),
+  `id` varchar(255) PRIMARY KEY DEFAULT (uuid()),
   `accountNumber` varchar(255) NOT NULL,
-  `bankBIC` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`, `bankBIC`)
+  `bankBIC` varchar(255) NOT NULL
 );
 
 CREATE TABLE `payer` (
@@ -61,4 +60,3 @@ ALTER TABLE `payment` ADD FOREIGN KEY (`bankDetailsId`) REFERENCES `bankDetails`
 ALTER TABLE `refund` ADD FOREIGN KEY (`payment`) REFERENCES `payment` (`id`);
 
 ALTER TABLE `transaction` ADD FOREIGN KEY (`paymentId`) REFERENCES `payment` (`id`);
-
