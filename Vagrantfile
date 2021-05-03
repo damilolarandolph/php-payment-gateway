@@ -13,6 +13,7 @@ Vagrant.configure("2") do |config|
     gateway.vm.network "private_network", ip: "192.168.33.10"
     gateway.vm.synced_folder "./covpay", "/home/benson/covpay", type: "nfs", nfs_udp:false
     gateway.vm.synced_folder "./common", "/home/benson/common", type: "nfs", nfs_udp: false
+    gateway.vm.synced_folder "./public", "/home/benson/covpay/public/common", type: "nfs", nfs_udp: false
 
   end
 
@@ -22,6 +23,7 @@ config.vm.define "school" do |school|
     school.vm.network "private_network", ip: "192.168.33.11"
     school.vm.synced_folder "./school", "/home/benson/school", type: "nfs", nfs_udp:false
     school.vm.synced_folder "./common", "/home/benson/common", type: "nfs", nfs_udp: false
+    school.vm.synced_folder "./public", "/home/benson/school/public/common", type: "nfs", nfs_udp: false
 
   end
 
@@ -31,6 +33,7 @@ config.vm.define "mastercard" do |mastercard|
     mastercard.vm.network "private_network", ip: "192.168.33.12"
     mastercard.vm.synced_folder "./mastercard", "/home/benson/mastercard", type: "nfs", nfs_udp:false
     mastercard.vm.synced_folder "./common", "/home/benson/common", type: "nfs", nfs_udp: false
+    mastercard.vm.synced_folder "./public", "/home/benson/mastercard/public/common", type: "nfs", nfs_udp: false
 
   end
 
@@ -40,6 +43,8 @@ config.vm.define "banknet" do |banknet|
     banknet.vm.network "private_network", ip: "192.168.33.13"
     banknet.vm.synced_folder "./banknet", "/home/benson/banknet", type: "nfs", nfs_udp:false
     banknet.vm.synced_folder "./common", "/home/benson/common", type: "nfs", nfs_udp: false
+    banknet.vm.synced_folder "./public", "/home/benson/banknet/public/common", type: "nfs", nfs_udp: false
+
 
   end
 
@@ -49,6 +54,7 @@ config.vm.define "zenith" do |zenith|
     zenith.vm.network "private_network", ip: "192.168.33.14"
     zenith.vm.synced_folder "./zenith", "/home/benson/zenith", type: "nfs", nfs_udp:false
     zenith.vm.synced_folder "./common", "/home/benson/common", type: "nfs", nfs_udp: false
+    zenith.vm.synced_folder "./public", "/home/benson/zenith/public/common", type: "nfs", nfs_udp: false
 
   end
 
