@@ -10,6 +10,9 @@ RewriteBase /
 # Deliver the folder or file directly if it exists on the server
 #RewriteCond %{REQUEST_FILENAME} -d
 #RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond $1 !^public
  
 # Push every request to index.php
 RewriteRule ^(.*)$ index.php [QSA]
+
+
