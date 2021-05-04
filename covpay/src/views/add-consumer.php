@@ -41,7 +41,7 @@
                     </div>
                     <div class="flex flex-col mt-5">
                         <label for="bank-name" class="text-lg font-semibold fleading-tight">Your Bank</label>
-                        <select required id="bank-name" name="bankName" class="h-10 px-2 w-full text-white bg-blue-700 rounded mt-2 focus:outline-none shadow" type="text">
+                        <select required id="bank-name" name="bankBIC" class="h-10 px-2 w-full text-white bg-blue-700 rounded mt-2 focus:outline-none shadow" type="text">
                             <option value="ZENITH_BANK">Zenith Bank</option>
                         </select>
                     </div>
