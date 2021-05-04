@@ -26,6 +26,8 @@ class ModelConfig
     {
         if ($isPK) {
             $this->pk = $fieldName;
+        } else {
+            $this->fields[] = $fieldName;
         }
     }
 
