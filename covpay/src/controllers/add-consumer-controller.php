@@ -1,8 +1,7 @@
 <?php
-require_once __DIR__ . "/../../../common/rest/controller.php";
 require_once __DIR__ . "/../data/repositories/consumer-repository.php";
 
-class AddConsumerController extends \Gateway\REST\Controller
+class AddConsumerController
 {
 
     /** @var ConsumerRepository */
@@ -11,11 +10,11 @@ class AddConsumerController extends \Gateway\REST\Controller
     {
         $this->consumerRepo = new ConsumerRepository();
     }
-    public function get()
+    public function show()
     {
         require_once __DIR__ . "/../views/add-consumer.php";
     }
-    public function post()
+    public function create()
     {
         $consumer = new Consumer();
         $consumer->bankAccount = $_POST['accountNumber'];

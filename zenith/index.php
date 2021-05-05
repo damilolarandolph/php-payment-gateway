@@ -2,32 +2,17 @@
 
 use Gateway\Routing\Router;
 
+ini_set('display_startup_errors', 1);
+ini_set('display_errors', 1);
+error_reporting(-1);
 require __DIR__ . "/../common/routing/router.php";
-require_once __DIR__ . "/../common/rest/controller.php";
-require_once __DIR__ . "/src/controllers/oauth/oauth-authorization.php";
+require_once __DIR__ . "/src/controllers/oauth.php";
 header("Content-Type: application/json");
+header("Cache-Control: no-cache");
 
 $router = new Router();
 
-
-$router->add("/migrate", new class extends \Gateway\REST\Controller
-{
-    public function get()
-    {
-        require_once __DIR__ . "/src/data/config/migrate.php";
-    }
-});
-
-$router->add("/", new class extends \Gateway\REST\Controller
-{
-
-    public function get()
-    {
-        var_dump(openssl_pkey_get_details(openssl_pkey_new())['key']);
-    }
-});
-
-$router->add("/oauth/authorize", new OauthAuthorizationController());
+$router->post("/oauth/authorize", OauthController::class, 'authorize');
 
 
 $router->navigate();
