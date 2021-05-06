@@ -4,9 +4,11 @@ CREATE TABLE `consumers` (
 );
 
 CREATE TABLE `accounts` (
-  `accountNumber` varchar(255) PRIMARY KEY NOT NULL,
+  `id` varchar(255) PRIMARY KEY NOT NULL DEFAULT (uuid()),
+  `accountNumber` varchar(255) UNIQUE NOT NULL,
   `fullName` varchar(255) NOT NULL,
-  `phoneNumber` varchar(255) NOT NULL
+  `phoneNumber` varchar(255) NOT NULL,
+  `signingKey` text NOT NULL
 );
 
 CREATE TABLE `mandate` (
@@ -18,10 +20,16 @@ CREATE TABLE `mandate` (
 CREATE TABLE `transaction` (
   `id` varchar(255) PRIMARY KEY DEFAULT (uuid()),
   `amount` int(11) NOT NULL,
-  `accountNumber` varchar(255),
+  `accountId` varchar(255),
   `status` varchar(100) NOT NULL
+);
+
+CREATE TABLE `revokedTokens` (
+  `id` varchar(255) PRIMARY KEY DEFAULT (uuid()),
+  `token` text NOT NULL,
+  `revokedAt` int NOT NULL
 );
 
 ALTER TABLE `mandate` ADD FOREIGN KEY (`transactionId`) REFERENCES `transaction` (`id`);
 
-ALTER TABLE `transaction` ADD FOREIGN KEY (`accountNumber`) REFERENCES `accounts` (`accountNumber`);
+ALTER TABLE `transaction` ADD FOREIGN KEY (`accountId`) REFERENCES `accounts` (`id`);
