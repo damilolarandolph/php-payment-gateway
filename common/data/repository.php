@@ -25,7 +25,7 @@ abstract class Repository
     }
 
     /**
-     * @param string|int $id
+     * @param string|false $id
      * 
      */
     public function findById($id)
@@ -37,7 +37,7 @@ abstract class Repository
             return false;
         }
 
-        $stmt->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $this->modelConfig->class);
+        $stmt->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $this->modelConfig->getClass());
         $res = $stmt->fetch();
         return $res;
     }
@@ -46,7 +46,7 @@ abstract class Repository
         $q = "SELECT * FROM {$this->modelConfig->getTable()} $options";
         $stmt = $this->conn->prepare($q);
         $stmt->execute($params);
-        $res = $stmt->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $this->modelConfig->class);
+        $res = $stmt->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $this->modelConfig->getClass());
         return $res;
     }
     public function save($model)
@@ -70,6 +70,7 @@ abstract class Repository
         $stmt = $this->conn->prepare($q);
         $stmt->execute(array($id));
     }
+
     public function deleteWhere($whereStatement, ...$params)
     {
         $q = "DELETE FROM {$this->modelConfig->getTable()} WHERE {$whereStatement}";
