@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . "/config.php";
 
 try {
     $opt = array(
@@ -7,11 +6,11 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_CLASS,
         PDO::ATTR_EMULATE_PREPARES   => FALSE,
     );
-    $dbConn = new PDO("mysql:host=" . MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, $opt);
+    $dbConn = new PDO("mysql:host=" . constant('MYSQL_HOST'), constant('MYSQL_USER'), constant('MYSQL_PASSWORD'), $opt);
 
-    $dbConn->exec("DROP DATABASE IF EXISTS " . "`" .  MYSQL_DB . "` ;");
-    $dbConn->exec("CREATE DATABASE " . "`" .  MYSQL_DB . "` ;");
-    $dbConn->exec("USE " .   MYSQL_DB . " ;");
+    $dbConn->exec("DROP DATABASE IF EXISTS " . "`" .  constant('MYSQL_DB') . "` ;");
+    $dbConn->exec("CREATE DATABASE " . "`" .  constant('MYSQL_DB') . "` ;");
+    $dbConn->exec("USE " .   constant('MYSQL_DB') . " ;");
     $sqlFile = file_get_contents(__DIR__ . "/gateway.sql");
     $dbConn->exec($sqlFile);
     echo "DATABASE MIGRATED SUCCESSFULLY";
