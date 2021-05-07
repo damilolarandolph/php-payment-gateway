@@ -1,2 +1,3 @@
 .vagrant
+*.log
 config.php
