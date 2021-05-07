@@ -30,6 +30,12 @@ CREATE TABLE `revokedTokens` (
   `revokedAt` int NOT NULL
 );
 
+CREATE TABLE `tokens` (
+  `id` varchar(255) PRIMARY KEY DEFAULT (uuid()),
+  `token` text NOT NULL,
+  `refreshToken` text NOT NULL
+);
+
 ALTER TABLE `mandate` ADD FOREIGN KEY (`transactionId`) REFERENCES `transaction` (`id`);
 
 ALTER TABLE `transaction` ADD FOREIGN KEY (`accountId`) REFERENCES `accounts` (`id`);
