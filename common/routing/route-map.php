@@ -50,7 +50,30 @@ class RouteMap
         }
         $route = $currTable['.'];
         $controller = new $route->clazz();
-        $controller->{$route->method}();
+        $data = NULL;
+
+        if ($method == RouteMethods::$GET) {
+            $data = $_GET;
+        } else {
+            $data = $this->getPostData();
+        }
+
+        $controller->{$route->method}($data);
+    }
+
+    private function getPostData()
+    {
+        if ($_SERVER['CONTENT_TYPE'] == 'application/json') {
+            $postData = json_decode(file_get_contents('php://input'), true, 512);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                http_response_code(400);
+                echo json_encode(array('message' => json_last_error_msg()));
+                die();
+            }
+            return $postData;
+        } else {
+            return $_POST;
+        }
     }
     /**
      * @param string $path 
