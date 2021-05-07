@@ -1,3 +1,4 @@
 .vagrant
 *.log
+.env
 config.php
