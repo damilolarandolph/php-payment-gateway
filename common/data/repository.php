@@ -49,6 +49,20 @@ abstract class Repository
         $res = $stmt->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $this->modelConfig->getClass());
         return $res;
     }
+
+    public function findOne($options, ...$params)
+    {
+        $q = "SELECT * FROM {$this->modelConfig->getTable()} $options LIMIT 1";
+        $stmt = $this->conn->prepare($q);
+        $stmt->execute($params);
+        if ($stmt->rowCount() == 0) {
+            return false;
+        }
+        $stmt->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $this->modelConfig->getClass());
+        $res = $stmt->fetch();
+        return $res;
+    }
+
     public function save($model)
     {
         $fields = implode(",", $this->modelConfig->getFields());
