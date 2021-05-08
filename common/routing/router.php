@@ -37,9 +37,15 @@ class Router
 
     public function navigate()
     {
-        $path = $_SERVER["REQUEST_URI"];
         $method = $_SERVER["REQUEST_METHOD"];
 
-        $this->routeMap->invokeRoute($method, $path);
+        $this->routeMap->invokeRoute($method, $this->getUrlPath());
+    }
+
+    private function getUrlPath()
+    {
+        $link =     (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $urlComponents = parse_url($link);
+        return $urlComponents['path'];
     }
 }
