@@ -101,7 +101,7 @@
     <div class='otp-container'>
         <form method='POST' action='http://zenith.com/oauth/loginCheck' id='otp-form'>
             <div class='verification-image'>
-                <img src='./smartphone.svg' alt='some image' />
+                <img src='/public/images/smartphone.svg' alt='some image' />
             </div>
             <h4 class='verification-text'>Verification</h4>
             <p class='verification-subtext'>
