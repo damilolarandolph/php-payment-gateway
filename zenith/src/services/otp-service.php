@@ -13,7 +13,7 @@ abstract class OtpService
             'medium' => 'sms',
             'message' => 'Your Bank OTP is, %otp_code%',
             'number' => $phoneNumber,
-            'sender_id' => 'CovPay Zenith',
+            'sender_id' => 'COVPAYZEN',
             'type' => 'numeric',
         ];
 
@@ -39,8 +39,8 @@ abstract class OtpService
     {
         $fields = [
             'api_key' => constant('ARKESEL_KEY'),
-            'code' => '173882',
-            'number' => '233544919953',
+            'code' => $answer,
+            'number' => $phoneNumber,
         ];
 
         $curl = curl_init();
