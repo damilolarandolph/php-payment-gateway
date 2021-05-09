@@ -17,7 +17,7 @@ abstract class EnvParser
         $lines = preg_split("/\r\n|\n|\r/", $file);
 
         foreach ($lines as $line) {
-            $keyValues = explode('=', $line);
+            $keyValues = explode('=', $line, 2);
             $key = trim($keyValues[0]);
             $value = trim($keyValues[1]);
             define($key, $value);
