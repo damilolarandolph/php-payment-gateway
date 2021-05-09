@@ -23,4 +23,22 @@ class BankAccountRepository extends \Gateway\Data\Repository
         }
         parent::__construct($modelConfig, PDOCONN::$instance);
     }
+
+
+    /**
+     * 
+     * @param string $accountNumber  The account number
+     * 
+     * @return BankAccount|false Returns an instance of the BankAccount model or false
+     * if an account with the account number could not be found.
+     * 
+     */
+    public function findByAccountNumber($accountNumber)
+    {
+        $bankAccount = $this->findOne("WHERE accountNumber = ?", $accountNumber);
+        if (!$bankAccount) {
+            return false;
+        }
+        return $bankAccount;
+    }
 }
