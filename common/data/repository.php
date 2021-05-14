@@ -69,13 +69,11 @@ abstract class Repository
         $qMarks = str_repeat('?,', count($this->modelConfig->getFields()));
         $qMarks = substr($qMarks, 0, strlen($qMarks) - 1);
         $q = "INSERT INTO {$this->modelConfig->getTable()} ($fields) VALUES ($qMarks)";
-        var_dump($q);
         $stmt = $this->conn->prepare($q);
         $fieldArray = [];
         foreach ($this->modelConfig->getFields() as $field) {
             $fieldArray[] = $model->{$field};
         }
-        var_dump($fieldArray);
         $stmt->execute($fieldArray);
     }
     public function deleteById($id)

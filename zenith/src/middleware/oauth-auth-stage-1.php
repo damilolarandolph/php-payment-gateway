@@ -3,7 +3,6 @@ require_once __DIR__ . "/../data/repositories/consumer-repository.php";
 
 $headers = getallheaders();
 if (empty($headers['authorization'])) {
-    var_dump($headers);
     http_response_code(401);
     $message = new \stdClass();
     $message->message = "AUTH_HEADER_MISSING";
