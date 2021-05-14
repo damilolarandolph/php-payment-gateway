@@ -17,6 +17,8 @@ header("Cache-Control: no-cache");
 $router = new Router();
 $router->post("/oauth/authorize", OauthController::class, 'authorize');
 $router->get("/oauth/dialog", OauthController::class, 'displayOtpConfirm');
+$router->post("/oauth/loginCheck", OauthController::class, 'confirmOtp');
+$router->post("/oauth/swap", OauthController::class, 'swapToken');
 $router->get("/migrate", MigrationController::class, 'migrate');
 
 
