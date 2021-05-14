@@ -109,9 +109,9 @@
                 enter it to authorize the transaction.
             </p>
             <input maxlength='8' autocomplete='off' type='password' class='verification-input' name='otpAnswer' />
-            <input type='hidden' value='<?php echo $consumerId ?>' name='consumerApiKey' />
-            <input type='hidden' value='<?php echo $redirectURL ?>' name='redirectUrl' />
-            <input type='hidden' value='<?php echo $account ?>' name='accountNumber' />
+            <input type='hidden' value='<?php echo $consumerId ?>' name='consumerId' />
+            <input type='hidden' value='<?php echo $redirectURL ?>' name='redirectURL' />
+            <input type='hidden' value='<?php echo $account ?>' name='account' />
             <input type='hidden' value='<?php echo $data ?>' name='data' />
             <button class='verification-button'>Verify</button>
         </form>
