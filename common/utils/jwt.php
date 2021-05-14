@@ -12,7 +12,7 @@ abstract class JWT
     {
         $header64 = base64_encode(json_encode($tokenClaims['header']));
         $payload64 = base64_encode(json_encode($tokenClaims['payload']));
-        $computedSignature = hash_hmac('sha256', $header64 . '.' . $payload64, $signingKey);
+        $computedSignature = hash_hmac('sha256', $header64 . '.' . $payload64, hex2bin($signingKey));
         return $computedSignature == $tokenClaims['signature'];
     }
     public static function createToken($exp, $iss, $otherClaims, $signingKey)
@@ -20,7 +20,7 @@ abstract class JWT
         $header = array('alg' => 'HS256', 'typ' => 'JWT');
         $payload = array_merge(array('exp' => $exp, 'iss' => $iss), $otherClaims);
         $headerPayload = base64_encode(json_encode($header)) . '.' . base64_encode(json_encode($payload));
-        $signature = hash_hmac('sha256', $headerPayload, $signingKey);
+        $signature = hash_hmac('sha256', $headerPayload, hex2bin($signingKey));
         return $headerPayload . '.' . $signature;
     }
     public static function getClaims($token)
