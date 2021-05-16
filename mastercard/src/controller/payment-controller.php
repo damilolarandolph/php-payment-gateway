@@ -106,7 +106,7 @@ class PaymentController
         }
     }
 
-    public function getSource($sourceMap)
+    private function getSource($sourceMap)
     {
         if (!empty($sourceMap['card'])) {
             $cardData = $sourceMap['card'];
