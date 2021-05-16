@@ -3,7 +3,7 @@ require_once __DIR__ . "/../data/repositories/consumer-repository.php";
 require_once __DIR__ . "/../../../common/utils/field_checker.php";
 require_once __DIR__ . "/../../../common/utils/aes-encrypt.php";
 
-class MessengingController
+class MessageController
 {
 
     private $consumerRepo;
@@ -13,7 +13,8 @@ class MessengingController
         $this->consumerRepo = new ConsumerRepository();
     }
 
-    public function  receiveMessage($reqeustData)
+
+    public function post($reqeustData)
     {
         $errors = checkFields($reqeustData, array("to", "from", "message"));
 
@@ -68,6 +69,7 @@ class MessengingController
         ));
         $response = curl_exec($curl);
         $http_code = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
+        curl_close($curl);
         http_response_code($http_code);
         echo $response;
     }
