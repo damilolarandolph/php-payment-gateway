@@ -46,11 +46,13 @@ abstract class MessengingService
         $key = constant("MESSENGING_KEY");
         $messageDecrypted = AESEncryptionEngine::decrypt($messagePayloadCipher, $key);
         if (!$messageDecrypted) {
+            http_response_code(401);
             return false;
         }
         $json = json_decode($messageDecrypted, true);
 
         if (json_last_error() == JSON_ERROR_NONE) {
+            http_response_code(401);
             return false;
         }
 
