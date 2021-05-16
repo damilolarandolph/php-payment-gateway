@@ -9,20 +9,8 @@ CREATE TABLE `accounts` (
   `fullName` varchar(255) NOT NULL,
   `phoneNumber` varchar(255) NOT NULL,
   `signingKey` text NOT NULL,
+  `balance` float(15) NOT NULL,
   PRIMARY KEY (`id`, `accountNumber`)
-);
-
-CREATE TABLE `mandate` (
-  `id` varchar(255) PRIMARY KEY DEFAULT (uuid()),
-  `status` varchar(100) NOT NULL,
-  `transactionId` varchar(255)
-);
-
-CREATE TABLE `transaction` (
-  `id` varchar(255) PRIMARY KEY DEFAULT (uuid()),
-  `amount` int(11) NOT NULL,
-  `accountId` varchar(255),
-  `status` varchar(100) NOT NULL
 );
 
 CREATE TABLE `revokedTokens` (
@@ -38,10 +26,6 @@ CREATE TABLE `tokens` (
   `token` text NOT NULL,
   `refreshToken` text NOT NULL
 );
-
-ALTER TABLE `mandate` ADD FOREIGN KEY (`transactionId`) REFERENCES `transaction` (`id`);
-
-ALTER TABLE `transaction` ADD FOREIGN KEY (`accountId`) REFERENCES `accounts` (`id`);
 
 ALTER TABLE `tokens` ADD FOREIGN KEY (`consumerId`) REFERENCES `consumers` (`apiKey`);
 

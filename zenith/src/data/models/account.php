@@ -9,6 +9,7 @@ class BankAccount
     public $fullName;
     public $phoneNumber;
     public $signingKey;
+    public $balance;
 
     public function __construct()
     {
