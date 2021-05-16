@@ -3,6 +3,7 @@
 namespace Gateway\Routing;
 
 use Error;
+use ReflectionMethod;
 
 require_once __DIR__ . '/route.php';
 
@@ -58,7 +59,8 @@ class RouteMap
             $data = $this->getPostData();
         }
 
-        $controller->{$route->method}($data);
+        $reflectionMethod = new ReflectionMethod($controller, $route->method);
+        $reflectionMethod->invoke($controller, $data);
     }
 
     private function getPostData()
