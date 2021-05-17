@@ -85,6 +85,23 @@ abstract class Repository
         }
         $stmt->execute($fieldArray);
     }
+
+    public function update($model)
+    {
+        $updateString = "";
+        foreach ($this->modelConfig->getFields() as $field) {
+            $updateString .= "{$field} = ?, ";
+        }
+        $updateString = substr($updateString, 0, strlen($updateString) - 2);
+        $q = "UPDATE {$this->modelConfig->getTable()} SET {$updateString} WHERE {$this->modelConfig->getId()} = ?";
+        $stmt = $this->conn->prepare($q);
+        $fieldArray = [];
+        foreach ($this->modelConfig->getFields() as $field) {
+            $fieldArray[] = $model->{$field};
+        }
+        $fieldArray[] = $model->{$this->modelConfig->getId()};
+        $stmt->execute($fieldArray);
+    }
     public function deleteById($id)
     {
         $q = "DELETE FROM {$this->modelConfig->getTable()} WHERE {$this->modelConfig->getId()} = ?";
