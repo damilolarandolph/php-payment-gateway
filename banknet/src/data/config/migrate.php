@@ -19,11 +19,11 @@ try {
 
     $zenith = new Consumer();
     $zenith->name = "ZENITH";
-    $zenith->messengingEndpoint = "http://zenith.com/messenging";
+    $zenith->messengingEndpoint = "http://zenith.com/api/messenging";
 
     $mastercard = new Consumer();
     $mastercard->name = "MASTERCARD";
-    $mastercard->messengingEndpoint = "http://mastercard.com/messenging";
+    $mastercard->messengingEndpoint = "http://mastercard.com/api/messenging";
 
     $consumerRepo->save($zenith);
     $consumerRepo->save($mastercard);
