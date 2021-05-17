@@ -1,0 +1,69 @@
+.hero {
+  background-image: url("/assets/images/banner_img2.jpg");
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 100px 100px;
+}
+
+.hero h3 {
+  font-size: 200px;
+  color: var(--champagne);
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+.hero p {
+  color: var(--champagne);
+  opacity: 0.5;
+  font-size: 40px;
+}
+
+.home-section {
+  margin: 100px auto 50px auto;
+  padding: 0px 70px;
+  width: 90%;
+}
+
+.home-section .title {
+  font-size: 30px;
+  display: inline-block;
+  color: var(--granny-smith-apple);
+  border-bottom: 5px solid teal;
+}
+
+.home-section > .content {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px 0px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 768px) {
+  .hero {
+    flex-direction: column;
+    padding: 20px 20px;
+  }
+
+  .hero h3 {
+    font-size: 80px;
+    width: max-content;
+  }
+
+  .hero p {
+    width: max-content;
+    font-size: 20px;
+    margin-bottom: 30px;
+  }
+
+  .home-section {
+    padding: 0 4px;
+    width: max-content;
+  }
+  .home-section > .content {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}

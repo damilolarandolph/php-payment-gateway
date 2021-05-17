@@ -1,0 +1,46 @@
+body {
+  height: max-content;
+}
+
+.layout-wrapper {
+  display: flex;
+  height: 90vh;
+  max-height: 90vh;
+  overflow-y: hidden;
+}
+
+.main-content {
+  max-height: 100%;
+  overflow-y: scroll;
+  flex: 1;
+}
+
+.route {
+  padding: 30px;
+}
+
+.events-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  row-gap: 20px;
+}
+
+.upcoming-event .kitchen-sink .item h5 {
+  font-size: 25px;
+}
+
+.upcoming-event {
+  max-width: 300px;
+}
+
+.upcoming-event .extra-details {
+  font-size: 15px;
+}
+
+.upcoming-event .content .event-image {
+  height: 200px;
+}
+
+footer {
+  margin-top: 0;
+}
