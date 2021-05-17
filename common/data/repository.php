@@ -50,6 +50,15 @@ abstract class Repository
         return $res;
     }
 
+    public function findAll()
+    {
+        $q = "SELECT * FROM {$this->modelConfig->getTable()}";
+        $stmt = $this->conn->prepare($q);
+        $stmt->execute();
+        $res = $stmt->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $this->modelConfig->getClass());
+        return $res;
+    }
+
     public function findOne($options, ...$params)
     {
         $q = "SELECT * FROM {$this->modelConfig->getTable()} $options LIMIT 1";
