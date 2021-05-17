@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "/../../../../common/utils/aes-encrypt.php";
+require_once __DIR__ . "/../../../common/utils/aes-encrypt.php";
 
 
 
