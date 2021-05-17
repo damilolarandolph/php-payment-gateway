@@ -10,6 +10,7 @@ require_once __DIR__ . "/../common/utils/env-parser.php";
 require __DIR__ . "/../common/routing/router.php";
 require_once __DIR__ . "/src/controller/migration-controller.php";
 require_once __DIR__ . "/src/controller/payment-controller.php";
+require_once __DIR__ . "/src/controller/message-controller.php";
 header("Content-Type: application/json");
 header("Cache-Control: no-cache");
 
@@ -19,6 +20,7 @@ $router = new Router();
 $router->get("/migrate", MigrationController::class, 'migrate');
 $router->post("/pay", PaymentController::class, 'pay');
 $router->post("/requestotp", PaymentController::class, 'requestOTP');
+$router->post("/api/message", MessageController::class, 'message');
 
 
 
