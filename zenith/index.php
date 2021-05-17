@@ -10,6 +10,8 @@ require_once __DIR__ . "/../common/utils/env-parser.php";
 require __DIR__ . "/../common/routing/router.php";
 require_once __DIR__ . "/src/controllers/oauth.php";
 require_once __DIR__ . "/src/controllers/migration.php";
+require_once __DIR__ . "/src/controllers/messaging.php";
+require_once __DIR__ . "/src/controllers/account.php";
 header("Content-Type: application/json");
 header("Cache-Control: no-cache");
 
@@ -20,6 +22,9 @@ $router->get("/oauth/dialog", OauthController::class, 'displayOtpConfirm');
 $router->post("/oauth/loginCheck", OauthController::class, 'confirmOtp');
 $router->post("/oauth/swap", OauthController::class, 'swapToken');
 $router->get("/migrate", MigrationController::class, 'migrate');
+$router->post("/api/message", MessageController::class, "message");
+$router->post("/api/account", AccountController::class, 'createAccount');
+$router->get("/", AccountController::class, "home");
 
 
 $router->navigate();
