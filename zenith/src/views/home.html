@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/public/common/css/all.min.css" />
+    <link rel="stylesheet" href="/public/common/css/common.css" />
+    <link rel="stylesheet" href="/public/common/css/dashboard.css" />
+    <title>Dashboard</title>
+  </head>
+
+  <body>
+    <nav class="head-nav">
+      <div class="logo">
+        <a href="/">
+          <img src="/public/common/images/logo.png" />
+        </a>
+      </div>
+      <form method="GET" action="/search.php">
+        <div class="search">
+          <input name="query" placeholder="Search for events...." type="text" />
+        </div>
+      </form>
+      <div></div>
+    </nav>
+    <div class="layout-wrapper">
+      <aside for="sidebar-content" class="sidebar">
+        <a class="item selected">
+          <i class="far fa-calendar-plus"></i>
+          <span>Create Account</span>
+        </a>
+      </aside>
+      <main id="sidebar-content" class="main-content sidebar-routes">
+        <div class="route">
+          <form class="form" id="create-account-form">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input required name="name" type="text" />
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input required name="phone" type="tel" />
+            </div>
+            <div class="form-button">
+              <button class="ui-button">Submit</button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+
+    <footer>
+      <div class="logo">
+        <img src="/public/common/images/logo.png" />
+      </div>
+      <ul class="links">
+        <li class="header">Explore</li>
+        <li><a href="/search.php?query=">Events</a></li>
+      </ul>
+      <ul class="links">
+        <li class="header">Join Us</li>
+        <li><a href="/signin.php">Sign In</a></li>
+        <li><a href="/org-signup.php">Become an Organizer</a></li>
+        <li><a href="/signup.php">Sign Up</a></li>
+      </ul>
+    </footer>
+  </body>
+  <script src="/public/common/js/common.js"></script>
+  <script>
+    (async function () {
+      let form = document.getElementById("create-account-form");
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        const data = {
+          name: form.elements["name"].value,
+          phone: form.elements["phone"].value,
+        };
+        const options = {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+        let res = await fetch("http://zenith.com/api/account", options);
+        let resData = await res.json();
+        if (!res.ok) {
+          alert("Failed to create account " + resData["message"]);
+        } else {
+          alert(
+            `Account created successfully.\nYour account number is ${resData["account"]}`
+          );
+        }
+        return false;
+      });
+    })();
+  </script>
+</html>
