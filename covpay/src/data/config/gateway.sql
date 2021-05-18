@@ -2,7 +2,10 @@ CREATE TABLE `consumers` (
   `apiKey` varchar(255) PRIMARY KEY DEFAULT (uuid()),
   `apiSecret` varchar(255) NOT NULL,
   `bankAccount` varchar(255) NOT NULL,
-  `bankBIC` varchar(255) NOT NULL
+  `bankBIC` varchar(255) NOT NULL,
+  `token` text NOT NULL,
+  `refreshToken` text NOT NULL,
+  `name` varchar(255) NOT NULL
 );
 
 CREATE TABLE `session` (
