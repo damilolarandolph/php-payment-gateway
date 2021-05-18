@@ -25,7 +25,7 @@ class AccountController
         $errors = checkFields($requestData, array("name", "phone"));
 
         if ($errors !== true) {
-            echo $errors;
+            echo json_encode($errors);
             die();
         }
         extract($requestData);
@@ -40,7 +40,19 @@ class AccountController
         $account->fullName = $name;
         $account->phoneNumber = $phone;
         $account->balance = 0;
+        $message = new Message();
+        $message->to = "MASTERCARD";
+        $message->from = "ZENITH";
+        $message->message = array("messageType" => "CREATE_CARD", "account" => $account->accountNumber);
+        $result = MessengingService::sendMessage($message);
+        extract($result);
+        if ($result['statusCode'] !== 200) {
+            http_response_code($statusCode);
+            echo $response;
+            die();
+        }
         $this->accountRepo->save($account);
-        echo json_encode(array("status" =>  "success", "account" => $account->accountNumber));
+        $resp  = array_merge(array("status" =>  "success", "account" => $account->accountNumber), $response);
+        echo json_encode($resp);
     }
 }
