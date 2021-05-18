@@ -49,7 +49,7 @@ abstract class MessengingService
         }
         $json = json_decode($messageDecrypted, true);
 
-        if (json_last_error() == JSON_ERROR_NONE) {
+        if (json_last_error() !== JSON_ERROR_NONE) {
             http_response_code(401);
             return false;
         }
