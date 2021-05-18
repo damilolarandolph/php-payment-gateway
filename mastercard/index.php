@@ -20,8 +20,7 @@ $router = new Router();
 $router->get("/migrate", MigrationController::class, 'migrate');
 $router->post("/pay", PaymentController::class, 'pay');
 $router->post("/requestotp", PaymentController::class, 'requestOTP');
-$router->post("/api/message", MessageController::class, 'message');
-
+$router->post("/api/messenging", MessageController::class, 'message');
 
 
 $router->navigate();
