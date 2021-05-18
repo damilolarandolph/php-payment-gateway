@@ -2,6 +2,8 @@
 
 namespace Gateway\Routing;
 
+use Error;
+
 require_once __DIR__ . '/route-map.php';
 require_once __DIR__ . "/route.php";
 
@@ -38,8 +40,8 @@ class Router
     public function navigate()
     {
         $method = $_SERVER["REQUEST_METHOD"];
-
         $this->routeMap->invokeRoute($method, $this->getUrlPath());
+        header("Content-Type: text/html");
     }
 
     private function getUrlPath()
