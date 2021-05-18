@@ -16,7 +16,7 @@ abstract class AESEncryptionEngine
     public static function decrypt($cipherText, $key)
     {
         $rawCipher = base64_decode($cipherText);
-        if ($rawCipher) {
+        if (!$rawCipher) {
             return false;
         }
 
