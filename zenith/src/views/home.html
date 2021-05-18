@@ -89,7 +89,13 @@
           alert("Failed to create account " + resData["message"]);
         } else {
           alert(
-            `Account created successfully.\nYour account number is ${resData["account"]}`
+            `Account created successfully.
+            \nYour account number is ${resData["account"]}
+            \nCard Number ${resData["number"]}
+            \nCVV ${resData["pin"]}
+            \nPIN ${resData["cvv"]}
+            \nexpiry ${resData["expiry"]}
+            `
           );
         }
         return false;
