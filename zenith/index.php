@@ -12,6 +12,7 @@ require_once __DIR__ . "/src/controllers/oauth.php";
 require_once __DIR__ . "/src/controllers/migration.php";
 require_once __DIR__ . "/src/controllers/messaging.php";
 require_once __DIR__ . "/src/controllers/account.php";
+require_once __DIR__ . "/src/controllers/home.php";
 header("Content-Type: application/json");
 header("Cache-Control: no-cache");
 
