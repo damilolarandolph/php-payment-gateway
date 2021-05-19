@@ -17,15 +17,9 @@ try {
     $dbConn->exec($sqlFile);
     echo "DATABASE MIGRATED SUCCESSFULLY";
     $consumerRepo = new ConsumerRepository();
-    $accountRepo = new BankAccountRepository();
     $consumer = new Consumer();
     $consumer->apiSecret = bin2hex(random_bytes(32));
     $consumerRepo->save($consumer);
-    $bankAccount = new BankAccount();
-    $bankAccount->fullName = "Damilola Randolph";
-    $bankAccount->phoneNumber = "0234149134";
-    $bankAccount->balance = 40000;
-    $accountRepo->save($bankAccount);
     echo "DATABASE SEEDED SUCCESSFULLY";
 } catch (Exception $e) {
     echo "AN ERROR OCCURRED";
