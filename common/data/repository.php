@@ -2,7 +2,10 @@
 
 namespace Gateway\Data;
 
+use Gateway\Util\UUID;
+
 require_once __DIR__  . "/model-config.php";
+require_once __DIR__ . "/../utils/gen-uuid.php";
 
 
 abstract class Repository
@@ -72,7 +75,7 @@ abstract class Repository
         return $res;
     }
 
-    public function save($model)
+    public function save(&$model)
     {
         $fields = implode(",", $this->modelConfig->getFields());
         $qMarks = str_repeat('?,', count($this->modelConfig->getFields()));
@@ -80,6 +83,9 @@ abstract class Repository
         $q = "INSERT INTO {$this->modelConfig->getTable()} ($fields) VALUES ($qMarks)";
         $stmt = $this->conn->prepare($q);
         $fieldArray = [];
+        if (empty($model->{$this->modelConfig->getId()})) {
+            $model->{$this->modelConfig->getId()} =  UUID::v4();
+        }
         foreach ($this->modelConfig->getFields() as $field) {
             $fieldArray[] = $model->{$field};
         }
