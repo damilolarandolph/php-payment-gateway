@@ -26,9 +26,8 @@ class ModelConfig
     {
         if ($isPK) {
             $this->pk = $fieldName;
-        } else {
-            $this->fields[] = $fieldName;
         }
+        $this->fields[] = $fieldName;
     }
 
     public function getId()
