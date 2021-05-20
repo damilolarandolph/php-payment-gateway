@@ -15,5 +15,6 @@ class BankAccount
     {
         $this->accountNumber = '219' . getRandomInts(0, 9, 14);
         $this->signingKey = random256Hex();
+        $this->balance = 8000;
     }
 }
