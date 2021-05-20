@@ -658,7 +658,7 @@ footer .links li a:hover {
 }
 
 footer::after {
-  content: "Copyright 2021 Evently.com. LLC. All rights reserved.";
+  content: "Copyright 2021 CovPay. LLC. All rights reserved.";
   position: absolute;
   color: var(--champagne);
   opacity: 0.6;
