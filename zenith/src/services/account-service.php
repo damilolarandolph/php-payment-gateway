@@ -17,27 +17,33 @@ class AccountService
     {
         if ($account->balance < $amount) {
             http_response_code(401);
-            throw new Error(json_encode(array("status" => "fail", "message" => "INSUFFICIENT_FUNDS")));
+            throw new Error("INSUFFICIENT_FUNDS");
         }
-
-        $message = new Message();
-        $message->to = $toBIC;
-        $message->from = "ZENITH";
-        $message->message = array("messageType" => "DEPOSIT", "account" => $toAccount);
-        extract(MessengingService::sendMessage($message));
-        if ($statusCode != 200) {
-            http_response_code(401);
-            return false;
-        } else {
-            $account->balance -= $amount;
-            $this->accountRepo->save($account);
+        if ($toBIC == "ZENITH") {
+            $toAccount = $this->accountRepo->findByAccountNumber($toAccount);
+            $this->deposit($toAccount, $amount);
+            $this->accountRepo->update($account);
             return true;
+        } else {
+            $message = new Message();
+            $message->to = $toBIC;
+            $message->from = "ZENITH";
+            $message->message = array("messageType" => "DEPOSIT", "account" => $toAccount);
+            extract(MessengingService::sendMessage($message));
+            if ($statusCode != 200) {
+                http_response_code(401);
+                return false;
+            } else {
+                $account->balance -= $amount;
+                $this->accountRepo->update($account);
+                return true;
+            }
         }
     }
 
     public function deposit($account, $amount)
     {
         $account->balance += $amount;
-        $this->accountRepo->save($account);
+        $this->accountRepo->update($account);
     }
 }
