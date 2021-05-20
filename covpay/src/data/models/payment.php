@@ -25,6 +25,7 @@ class Payment implements JsonSerializable
         $map["data"] = $this->data;
         $map["amount"] = $this->amount;
         $map["state"] = $this->state;
+        $map["id"] = $this->id;
         return $map;
     }
 }
