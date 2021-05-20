@@ -65,7 +65,7 @@ class PaymentController
             "COVPAY",
             array(
                 "consumerId" => $consumer->apiKey,
-                "paymentId" => $payment->id
+                "paymentId" => $payment->id,
             ),
             $jwtKey
         );
@@ -73,7 +73,7 @@ class PaymentController
         echo json_encode(array(
             "status" => "success",
             "redirectURL" => "http://covpay.com/checkout?token={$jwt}",
-            "token" => $jwt
+            "paymentId" => $payment->id
         ));
     }
 
@@ -324,6 +324,7 @@ class PaymentController
         }
 
         if ($payment->state !== PaymentStates::SUCCESS) {
+            http_response_code(401);
             echo json_encode(array("status" => 'fail', "message" => "PAYMENT_NOT_SUCCESS"));
             die();
         }
@@ -449,5 +450,30 @@ class PaymentController
 
         $payments = $this->paymentRepo->find("WHERE consumerId=? AND payerPhone=?", $consumer->apiKey, $requestData['payerPhone']);
         echo json_encode($payments);
+    }
+
+    public function getTransaction($requestData)
+    {
+        $consumer = null;
+        try {
+            $consumer = ConsumerAuthMiddleware::invokeHeaderAuth();
+        } catch (Error $e) {
+            echo $e->getMessage();
+            die();
+        }
+        $errors = checkFields($requestData, array("paymentId"));
+        if ($errors !== true) {
+            echo json_encode($errors);
+            die();
+        }
+        $payment = $this->paymentRepo->findOne("WHERE id=? AND consumerId=?", $requestData['paymentId'], $consumer->apiKey);
+
+        if (!$payment) {
+            http_response_code(404);
+            echo json_encode(array("status" => "fail", "message" => "PAYMENT_NOT_FOUND"));
+            die();
+        }
+
+        echo json_encode(array("status" => "success", "payment" => $payment));
     }
 }
