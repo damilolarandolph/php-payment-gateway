@@ -11,6 +11,7 @@ require_once __DIR__ . "/src/controllers/student.php";
 require_once __DIR__ . "/src/controllers/migration.php";
 header("Cache-Control: no-cache");
 header("Content-Type: application/json");
+header("Access-Control-Allow-Origin: *");
 
 use Gateway\Routing\Router;
 
@@ -22,6 +23,7 @@ $router->get("/api/student", StudentController::class, "getStudent");
 $router->post("/api/student", StudentController::class, "createStudent");
 $router->post("/api/student/update", StudentController::class, "saveStudent");
 $router->get("/api/products", ProductController::class, "getProducts");
+$router->get("/api/product", ProductController::class, "getProduct");
 $router->post("/api/product", ProductController::class, "createProduct");
 
 

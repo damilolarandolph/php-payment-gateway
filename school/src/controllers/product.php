@@ -19,6 +19,24 @@ class ProductController
         echo json_encode($products);
     }
 
+    public function getProduct($requestData)
+    {
+        $errors = checkFields($requestData, array("id"));
+        if ($errors !== true) {
+            echo json_encode($errors);
+            die();
+        }
+        $product = $this->productRepository->findById($requestData['id']);
+
+        if (!$product) {
+            http_response_code(404);
+            echo json_encode(array("status" => "fail", "message" => "PRODUCT_NOT_FOUND"));
+            die();
+        }
+
+        echo json_encode($product);
+    }
+
 
     public function createProduct($requestData)
     {
