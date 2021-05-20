@@ -162,4 +162,46 @@ class OauthController
       'refreshToken' => $token->refreshToken
     ));
   }
+
+  public function refreshToken($requestData)
+  {
+
+    require_once __DIR__ . '/../middleware/oauth-auth-stage-1.php';
+    $errors = checkFields($requestData, array("refreshToken"));
+    $refeshToken  = $requestData['refreshToken'];
+
+    if ($errors !== true) {
+      echo json_encode($errors);
+      die();
+    }
+
+    $claims = null;
+    try {
+      $claims = JWTMiddleware::run($refeshToken);
+    } catch (Error $e) {
+      http_response_code(401);
+      echo json_encode(array("status" => "failed", "message" => $e->getMessage() . $refeshToken));
+      die();
+    }
+
+    $account = $this->accountRepo->findByAccountNumber($claims['payload']['account']);
+
+
+    $accessToken =  JWT::createToken(time() + (60 * 60), "COVPAYZEN", array(
+      'account' => $claims['payload']['account'],
+      'consumerId' => $claims['payload']['consumerId'],
+    ), $account->signingKey);
+
+    $newRefreshToken = JWT::createToken(time() + (30 * 24 * 60 * 60), "COVPAYZEN", array(
+      'account' => $claims['payload']['account'],
+      'consumerId' => $claims['payload']['consumerId'],
+      'accessToken' => $accessToken,
+    ), $account->signingKey);
+
+    echo json_encode(array(
+      "status" => "success",
+      "accessToken" => $accessToken,
+      "refreshToken" => $newRefreshToken
+    ));
+  }
 }
