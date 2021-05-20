@@ -412,4 +412,42 @@ class PaymentController
         $this->paymentRepo->update($payment);
         echo json_encode(array("status" => "success"));
     }
+
+
+    public function getTransactions()
+    {
+
+        $consumer = null;
+
+        try {
+            $consumer = ConsumerAuthMiddleware::invokeHeaderAuth();
+        } catch (Error $e) {
+            echo $e->getMessage();
+            die();
+        }
+
+        $payments = $this->paymentRepo->find("WHERE consumerId=?", $consumer->apiKey);
+        echo json_encode($payments);
+    }
+
+    public function getTransactionsForPayer($requestData)
+    {
+        $consumer = null;
+
+        try {
+            $consumer = ConsumerAuthMiddleware::invokeHeaderAuth();
+        } catch (Error $e) {
+            echo $e->getMessage();
+            die();
+        }
+        $errors = checkFields($requestData, array("payerPhone"));
+
+        if ($errors !== true) {
+            echo json_encode($errors);
+            die();
+        }
+
+        $payments = $this->paymentRepo->find("WHERE consumerId=? AND payerPhone=?", $consumer->apiKey, $requestData['payerPhone']);
+        echo json_encode($payments);
+    }
 }

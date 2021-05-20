@@ -27,6 +27,8 @@ $router->post("/api/payment/setcard", PaymentController::class, 'setCardDetails'
 $router->post("/api/payment/finish", PaymentController::class, 'confirmOtp');
 $router->get("/api/payment/details", PaymentController::class, 'getCheckoutInfo');
 $router->post("/api/payment/refund", PaymentController::class, 'refundTransaction');
+$router->post("/api/transactions", PaymentController::class, 'getTransactions');
+$router->post("/api/payer/transactions", PaymentController::class, 'getTransactionsForPayer');
 $router->get("/checkout", HomeController::class, 'checkout');
 $router->get("/migrate", MigrationController::class, "migrate");
 

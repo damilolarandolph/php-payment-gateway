@@ -1,10 +1,10 @@
 <?php
 
 
-class Payment
+class Payment implements JsonSerializable
 {
-    public  $id;
-    public  $payerPhone;
+    public $id;
+    public $payerPhone;
     public $payerName;
     public $consumerId;
     public $data;
@@ -15,6 +15,17 @@ class Payment
     public function __construct()
     {
         $this->state = PaymentStates::PENDING;
+    }
+
+    public function jsonSerialize()
+    {
+        $map = array();
+        $map["payerPhone"] = $this->payerPhone;
+        $map["payerName"] = $this->payerName;
+        $map["data"] = $this->data;
+        $map["amount"] = $this->amount;
+        $map["state"] = $this->state;
+        return $map;
     }
 }
 
