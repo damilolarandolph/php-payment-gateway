@@ -1,9 +1,13 @@
-import { FormControl, FormHelperText, Grid, Icon, InputLabel, OutlinedInput, TextField } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import { Button, CircularProgress, FormControl, FormHelperText, Grid, Icon, InputLabel, OutlinedInput, TextField } from '@material-ui/core';
+import React, { useContext, useEffect, useState } from 'react';
 import Cards from 'react-credit-cards';
 import 'react-credit-cards/es/styles-compiled.css';
 import { usePaymentInputs } from 'react-payment-inputs';
 import images from 'react-payment-inputs/images';
+import { ProviderContext } from './Provider';
+import { useStyles } from './App';
+import { JSEncrypt } from 'jsencrypt';
+import { useHistory } from 'react-router';
 
 
 
@@ -16,11 +20,47 @@ export default function CardPayment({ disablePayButton }) {
         name: '',
         number: ''
     });
+    const [loading, setLoading] = useState(false);
+    const classes = useStyles();
+    const history = useHistory();
+    const [buttonEnabled, setButtonEnabled] = useState(false);
+    const { providerState, setProviderState } = useContext(ProviderContext)
     const [otherErrors, setOtherErrors] = useState({
         nameError: undefined,
         pinError: undefined,
     })
 
+    console.log(providerState);
+    let payCreditCard = async () => {
+        setLoading(true);
+        const jsCrypt = new JSEncrypt();
+        jsCrypt.setPublicKey(providerState.paymentDetails.publicKey);
+        const data = {
+            expiry: formState.expiry.replaceAll(" ", ""),
+            token: providerState.token,
+            cardNumber: formState.number,
+            cvv: formState.cvc,
+            pin: formState.pin
+        }
+
+        const options = {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+
+        let res = await fetch("http://covpay.com/api/payment/setcard", options);
+        setLoading(false);
+        if (!res.ok) {
+            let resData = await res.json();
+            alert("Failed, " + resData['message']);
+        } else {
+            history.push("/otp" + history.location.search);
+        }
+
+    }
 
     let handleCardNumberChange = (e) => {
         setFormState({ ...formState, number: e.target.value, focused: 'number' });
@@ -31,17 +71,18 @@ export default function CardPayment({ disablePayButton }) {
 
     const { meta, getCardNumberProps, getExpiryDateProps, getCVCProps, getCardImageProps } = usePaymentInputs();
     useEffect(() => {
+        console.log(meta.error, otherErrors.nameError, setOtherErrors.pinError)
         if (meta.error ||
             otherErrors.nameError ||
             otherErrors.pinError
         ) {
-            console.log('hello');
-            disablePayButton(true)
+            setButtonEnabled(false);
         } else {
-            console.log('bye');
-            disablePayButton(false)
+            setButtonEnabled(true);
         }
     }, [formState, disablePayButton, meta, otherErrors])
+
+
     return <Grid container spacing={3}>
         <Grid item xs={12}>
             <Cards
@@ -64,7 +105,7 @@ export default function CardPayment({ disablePayButton }) {
         <Grid item xs={12}>
             <FormControl variant="outlined" fullWidth>
                 <InputLabel htmlFor="component-outlined">Card Number</InputLabel>
-                <OutlinedInput startAdornment={<svg style={{ marginRight: 6 }} {...getCardImageProps({ images })} />} inputProps={{ ...getCardNumberProps({ onInput: handleCardNumberChange }) }} variant="outlined" label="Card Number" fullWidth />
+                <OutlinedInput startAdornment={<svg style={{ marginRight: 6 }} {...getCardImageProps({ images })} />} inputProps={{ onInput: handleCardNumberChange }} variant="outlined" label="Card Number" fullWidth />
                 {/* <FormHelperText>{meta.erroredInputs.cardNumber}</FormHelperText> */}
             </FormControl>
         </Grid>
@@ -95,5 +136,12 @@ export default function CardPayment({ disablePayButton }) {
                 <FormHelperText>{ }</FormHelperText>
             </FormControl>
         </Grid>
-    </Grid>;
+        <Button onClick={payCreditCard} disabled={!buttonEnabled} style={{ marginTop: 10 }} classes={{ hover: classes.paymentButtonSelected, }} className={classes.paymentButton} size="large" variant='contained' disableElevation>
+            {loading ? "Loading" : `Pay ${providerState.paymentDetails.amount} GHS`}
+        </Button>
+        <Button className={classes.cancelButton} size="large" variant='contained' disableElevation>
+            Cancel
+      </Button>
+    </Grid>
+        ;
 }
