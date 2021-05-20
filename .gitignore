@@ -2,3 +2,4 @@
 *.log
 .env
 config.php
+/covpay/public/static
