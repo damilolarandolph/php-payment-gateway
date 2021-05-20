@@ -6,7 +6,14 @@ class HomeController
 
     public function home()
     {
+        header("Content-Type: text/html");
         require_once __DIR__ . "/../views/home.html";
+    }
+
+    public function checkout()
+    {
+        header("Content-Type: text/html");
+        require_once __DIR__ . "/../../public/index.html";
     }
 
     public function createConsumer($requestData)
