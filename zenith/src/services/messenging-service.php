@@ -37,7 +37,7 @@ abstract class MessengingService
      * 
      * @param string $messagePayloadCipher
      * 
-     * @return array[]|string
+     * @return array[]|boolean
      */
     public static function extractMessage($messagePayloadCipher)
     {
