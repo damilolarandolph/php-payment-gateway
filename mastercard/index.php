@@ -18,8 +18,8 @@ header("Cache-Control: no-cache");
 $router = new Router();
 
 $router->get("/migrate", MigrationController::class, 'migrate');
-$router->post("/pay", PaymentController::class, 'pay');
-$router->post("/requestotp", PaymentController::class, 'requestOTP');
+$router->post("/api/pay", PaymentController::class, 'pay');
+$router->post("/api/requestotp", PaymentController::class, 'requestOTP');
 $router->post("/api/messenging", MessageController::class, 'message');
 
 
