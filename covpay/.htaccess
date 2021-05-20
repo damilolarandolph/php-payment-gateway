@@ -1,4 +1,7 @@
 DirectoryIndex index.php
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Access-Control-Allow-Origin, Authorization, authorization"
+Header always set Access-Control-Allow-Methods "PUT, GET, POST, DELETE, OPTIONS"
 
 # enable apache rewrite engine
 RewriteEngine on
@@ -10,6 +13,8 @@ RewriteBase /
 # Deliver the folder or file directly if it exists on the server
 #RewriteCond %{REQUEST_FILENAME} -d
 #RewriteCond %{REQUEST_FILENAME} -f
+#RewriteCond %{REQUEST_METHOD} OPTIONS
+#RewriteRule ^(.*)$ $1 [R=200,L]
 RewriteCond $1 !^public
  
 # Push every request to index.php

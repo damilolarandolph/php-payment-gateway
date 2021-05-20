@@ -40,8 +40,11 @@ class Router
     public function navigate()
     {
         $method = $_SERVER["REQUEST_METHOD"];
+        if ($method == "OPTIONS") {
+            http_response_code(200);
+            die();
+        }
         $this->routeMap->invokeRoute($method, $this->getUrlPath());
-        header("Content-Type: text/html");
     }
 
     private function getUrlPath()
