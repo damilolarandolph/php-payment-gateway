@@ -17,34 +17,34 @@ abstract class JWTMiddleware
         $accountRepo = new BankAccountRepository();
 
 
-        $token = $revokedTokenRepo->findOne("WHERE token=?", $token);
-        if ($token) {
+        $revoked = $revokedTokenRepo->findOne("WHERE token=?", $token);
+        if ($revoked) {
             http_response_code(401);
             throw new Error("TOKEN_REVOKED");
         }
 
         $claims = null;
         try {
-            $claims =   JWT::getClaims($token);
+            $claims = JWT::getClaims($token);
         } catch (Error $e) {
             http_response_code(400);
             throw new Error("TOKEN_MALFORMED");
         }
 
-        if ($claims['exp'] >= time()) {
+        if ($claims['payload']['exp'] <= time()) {
             http_response_code(401);
             throw new Error("TOKEN_EXPIRED");
         }
 
-        $account = $accountRepo->findByAccountNumber($claims['account']);
+        $account = $accountRepo->findByAccountNumber($claims['payload']['account']);
         if (!$account) {
             http_response_code(401);
-            throw new Error("INVALID_TOKEN");
+            throw new Error("INVALID_TOKEN_ACCOUNT");
         }
 
         if (!JWT::verifyToken($claims, $account->signingKey)) {
             http_response_code(401);
-            throw new Error("INVALID_TOKEN");
+            throw new Error("INVALID_TOKEN_SIGNATURE");
         }
 
         return $claims;
