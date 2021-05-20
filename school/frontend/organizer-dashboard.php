@@ -8,21 +8,18 @@
   <link rel="stylesheet" href="/public/common/css/all.min.css" />
   <link rel="stylesheet" href="/public/common/css/common.css" />
   <link rel="stylesheet" href="/public/common/css/dashboard.css" />
-  <title>Dashboard</title>
+  <link rel="stylesheet" href="/public/common/css/jquery.dataTables.min.css" />
+  <title>Adepa</title>
 </head>
 
 <body>
   <nav class="head-nav">
     <div class="logo">
       <a href="/">
-        <img src="/public/common/images/logo.png" />
+        <img src="/public/common/images/covpay.png" />
       </a>
     </div>
-    <form method="GET" action="/search.php">
-      <div class="search">
-        <input name="query" placeholder="Search for events...." type="text" />
-      </div>
-    </form>
+
     <div></div>
   </nav>
   <div class="layout-wrapper">
@@ -45,6 +42,14 @@
       </a>
       <a class="item">
         <i class="far fa-calendar-check"></i>
+        <span>Add Owed Fees</span>
+      </a>
+      <a class="item">
+        <i class="far fa-calendar-check"></i>
+        <span>Refund Transaction</span>
+      </a>
+      <a class="item">
+        <i class="far fa-calendar-check"></i>
         <span>Create Student</span>
       </a>
     </aside>
@@ -55,6 +60,14 @@
             <label>Student ID</label>
             <input required name="id" type="text" />
           </div>
+          <div class="form-group">
+            <label>Payer Name</label>
+            <input required name="payerName" type="text" />
+          </div>
+          <div class="form-group">
+            <label>Payer Phone</label>
+            <input required name="payerPhone" type="text" />
+          </div>
           <div class="form-button">
             <button class="ui-button">Submit</button>
           </div>
@@ -63,7 +76,19 @@
       <div class="route">
         <ul class="events-list" id="shop-view"></ul>
       </div>
-      <div class="route"></div>
+      <div class="route">
+        <form class="form" style="margin-bottom: 30px;" id="view-transactions-form">
+          <div class="form-group">
+            <label>Payer Phone</label>
+            <input required name="payerPhone" type="search" />
+          </div>
+          <div class="form-button">
+            <button class="ui-button">Get Transactions</button>
+          </div>
+          <table id="table" class="display" style="width:100%; margin-top: 10px;"></table>
+
+        </form>
+      </div>
       <div class="route">
         <form class="form" id="create-product-form">
           <div class="form-group">
@@ -84,6 +109,32 @@
         </form>
       </div>
       <div class="route">
+        <form class="form" id="add-debt-form">
+          <div class="form-group">
+            <label>Student Id</label>
+            <input required name="id" type="text" />
+          </div>
+          <div class="form-group">
+            <label>Amount</label>
+            <input required name="owedFees" type="number" />
+          </div>
+          <div class="form-button">
+            <button class="ui-button">Submit</button>
+          </div>
+        </form>
+      </div>
+      <div class="route">
+        <form class="form" id="refund-form">
+          <div class="form-group">
+            <label>Transaction ID</label>
+            <input required name="id" type="text" />
+          </div>
+          <div class="form-button">
+            <button class="ui-button">Refund Transaction</button>
+          </div>
+        </form>
+      </div>
+      <div class="route">
         <form class="form" id="create-student-form">
           <div class="form-group">
             <label>Student Name</label>
@@ -99,22 +150,108 @@
 
   <footer>
     <div class="logo">
-      <img src="/public/common/images/logo.png" />
+      <img src="/public/common/images/covpay.png" />
     </div>
-    <ul class="links">
-      <li class="header">Explore</li>
-      <li><a href="/search.php?query=">Events</a></li>
-    </ul>
-    <ul class="links">
-      <li class="header">Join Us</li>
-      <li><a href="/signin.php">Sign In</a></li>
-      <li><a href="/org-signup.php">Become an Organizer</a></li>
-      <li><a href="/signup.php">Sign Up</a></li>
-    </ul>
   </footer>
 </body>
 <script src="/public/common/js/common.js"></script>
+<script src="/public/common/js/jquery-3.6.0.min.js"></script>
+<script src="/public/common/js/jquery.dataTables.min.js"></script>
+<script>
+  window.covpayKey = "29a2c11d-e793-47ed-bf36-4e701c712fa5";
+</script>
+<script>
+  (function() {
+    let form = document.getElementById('refund-form');
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      let paymentId = form.elements['id'].value;
+      let options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "authorization": window.covpayKey
+        },
+        body: JSON.stringify({
+          paymentId: paymentId
+        })
+      }
 
+      let req = await fetch("http://covpay.com/api/payment/refund", options);
+
+      if (req.ok) {
+        alert("Success !");
+      } else {
+        let res = await req.json();
+        alert("Failed, " + res.message);
+      }
+      return false;
+    });
+  })();
+</script>
+
+<script>
+  (function() {
+    if (window.dataTable) {
+      window.dataTable.destroy();
+    }
+    let form = document.getElementById('view-transactions-form');
+    let table = document.getElementById('table');
+    form.addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      let payerPhone = form.elements['payerPhone'].value
+      let options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "authorization": window.covpayKey
+        },
+      }
+      res = await fetch("http://covpay.com/api/payer/transactions?payerPhone=" + payerPhone, options);
+      resData = await res.json();
+
+      table.innerHTML = "";
+
+      let innerHTML = "<thead><tr><th>Transaction ID</th><th>Name</th><th>Phone</th><th>Amount</th><th>State</th><th>Description</th></tr></thead>"
+      let body = "";
+
+      for (let transaction of resData) {
+        let name = transaction.payerName;
+        let phone = transaction.payerPhone;
+        let amount = transaction.amount;
+        let state = transaction.state;
+        let id = transaction.id;
+        let data = JSON.parse(transaction.data);
+        let description = "";
+        if (data.type == "product") {
+          res = await fetch("http://adepa.com/api/product?id=" + data.productId);
+          resData = await res.json();
+          description = "Paying for " + resData.name;
+        } else {
+          res = await fetch("http://adepa.com/api/student?id=" + data.studentId);
+          resData = await res.json();
+          description = "Paying for fee of " + resData.name;
+        }
+
+        let row = `<tr>
+        <td>${id}</td>
+        <td>${name}</td>
+        <td>${phone}</td>
+        <td>${amount}</td>
+        <td>${state}</td>
+        <td>${description}</td>
+        </tr>`;
+        body += row;
+      }
+      innerHTML += "<tbody>" + body + "</tbody> <tfoot><tr><th>Transaction ID</th><th>Name</th><th>Phone</th><th>Amount</th><th>State</th><th>Description</th></tr></tfoot>";
+      table.innerHTML = innerHTML;
+      window.dataTable = $("#table").DataTable();
+      return false;
+    });
+
+  })();
+</script>
 <script>
   (function() {
     let form = document.getElementById("create-product-form");
@@ -146,6 +283,45 @@
 
 <script>
   (function() {
+    let form = document.getElementById("add-debt-form");
+    form.addEventListener("submit", async function(e) {
+      e.preventDefault();
+      let studentId = form.elements['id'].value;
+      let amount = form.elements['owedFees'].value;
+      let req = await fetch("http://adepa.com/api/student?id=" + studentId);
+      let res = await req.json();
+      if (!req.ok) {
+        alert("Failed, " + res['message']);
+        return false;
+      }
+      res.owedFees = parseInt(res.owedFees);
+      res.owedFees += parseInt(amount);
+
+
+      const options = {
+        method: "POST",
+        body: JSON.stringify(res),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      req = await fetch("http://adepa.com/api/student/update", options);
+
+      if (!req.ok) {
+        res = await req.json();
+        alert("Failed, " + res['message']);
+        return false;
+      }
+      alert("Success");
+      return false;
+
+    });
+  })();
+</script>
+
+<script>
+  (function() {
     let form = document.getElementById("create-student-form");
     form.addEventListener("submit", async function(e) {
       e.preventDefault();
@@ -166,7 +342,8 @@
         let resData = await res.json();
         alert("Failed to add student " + resData.message);
       } else {
-        alert("Student Added Successfully");
+        let resData = await res.json();
+        alert("Student Added Successfully ID is " + resData['id']);
       }
       return false;
     });
@@ -196,7 +373,7 @@
       body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
-        "authorization": "b735eb61-3adb-452a-8b47-a03eef9da37f"
+        "authorization": window.covpayKey
       },
     }
 
@@ -255,13 +432,12 @@
 <script>
   (function() {
     let form = document.getElementById("pay-debt-form");
-
+    console.log(form);
     form.addEventListener("submit", async function(e) {
       e.preventDefault();
       let id = form.elements["id"].value;
       let res = await fetch("http://adepa.com/api/student?id=" + id);
       let resData = await res.json();
-
       if (!res.ok) {
         alert("Failed to get student, " + resData["message"]);
         return false;
@@ -277,9 +453,95 @@
       );
 
       if (!result) {
-        return;
+        return false;
       }
 
+      let metaData = JSON.stringify({
+        type: 'fees',
+        studentId: id
+      })
+
+      let phoneNumber = form.elements['payerPhone'].value;
+      let payerName = form.elements['payerName'].value;
+
+      let data = {
+        amount: resData["owedFees"],
+        payerPhone: phoneNumber,
+        payerName: payerName,
+        data: metaData
+      }
+      let options = {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          "authorization": window.covpayKey
+        },
+      }
+      res = await fetch("http://covpay.com/api/payment/start/", options);
+      resData = await res.json();
+
+
+      let debtChecker = async function(paymentId) {
+        let options = {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "authorization": window.covpayKey
+          },
+        }
+
+        let req = await fetch("http://covpay.com/api/transaction?paymentId=" + paymentId, options);
+
+        let res = await req.json();
+        if (!req.ok) {
+          console.log(res);
+          return;
+        }
+
+        if (res.payment.state == 'failed') {
+          alert('Transaction Failed');
+          return;
+        }
+
+        if (res.payment.state != 'success') {
+          return;
+        }
+        req = await fetch("http://adepa.com/api/student?id=" + id);
+        res = await req.json();
+        if (!req.ok) {
+          console.log(res);
+          return;
+        }
+        res.owedFees = 1;
+
+
+        options = {
+          method: "POST",
+          body: JSON.stringify(res),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+
+        req = await fetch("http://adepa.com/api/student/update", options);
+
+        if (!req.ok) {
+          console.log(res);
+          return false;
+        }
+        alert("Success");
+        clearInterval(window.debtInterval);
+      }
+
+      if (res.ok) {
+        window.open(resData['redirectURL'], '_blank');
+        window.debtInterval = window.setInterval(() => {
+          debtChecker(resData['paymentId'])
+        }, 6000)
+      } else {
+        alert("Failed, " + resData['message']);
+      }
       return false;
     });
   })();
