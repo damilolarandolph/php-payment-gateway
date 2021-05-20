@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . "/../data/repositories/student-repository.php";
 require_once __DIR__ . "/../../../common/utils/field_checker.php";
+require_once __DIR__ . "/../../../common/utils/random_int.php";
 
 class StudentController
 {
@@ -43,9 +44,11 @@ class StudentController
         }
 
         $student = new Student();
+        $student->id = "050" . getRandomInts(0, 9, 10);
         $student->name = $requestData['name'];
         $student->owedFees = $requestData['owedFees'];
         $this->studentRepository->save($student);
+        echo json_encode(array("status" => "success", "id" => $student->id));
     }
 
     public function saveStudent($requestData)
