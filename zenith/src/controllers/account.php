@@ -39,7 +39,6 @@ class AccountController
         $account = new BankAccount();
         $account->fullName = $name;
         $account->phoneNumber = $phone;
-        $account->balance = 0;
         $message = new Message();
         $message->to = "MASTERCARD";
         $message->from = "ZENITH";
